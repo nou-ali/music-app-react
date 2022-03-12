@@ -9,7 +9,7 @@ function chillHop() {
       audio: "https://mp3.chillhop.com/serve.php/?mp3=31516",
       color: ["#183718", "#9DB1BF"],
       id: uuidv4(),
-      active: false,
+      active: true,
     },
     {
       name: "Solar Cove",
@@ -19,7 +19,7 @@ function chillHop() {
       audio: "https://mp3.chillhop.com/serve.php/?mp3=16179",
       color: ["#FBCE99", "#882D42"],
       id: uuidv4(),
-      active: true,
+      active: false,
     },
     {
       name: "Daylight",
