@@ -6,6 +6,7 @@ import Library from "./components/Library";
 import Nav from "./components/Nav";
 import data from "./data";
 
+
 function App() {
   const audioRef = useRef(null);
   const [songs, setSongs] = useState(data());
@@ -24,9 +25,15 @@ function App() {
     const roundedCurrent = Math.round(current);
     const roundedDuration = Math.round(duration);
     const animationPercentage = Math.round((roundedCurrent / roundedDuration * 100))
-    console.log(animationPercentage);
     setSongInfo({ ...songInfo, currentTime: current, duration: duration, animationPercentage: animationPercentage});
   };
+
+  const songEndHandler = async () => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    await setCurrentSong(songs[currentIndex + 1 === songs.length ? 0 : currentIndex + 1])
+    if (isPlaying) audioRef.current.play();
+  }
+
   return (
     <div className="App">
       <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
@@ -55,6 +62,7 @@ function App() {
         onLoadedMetadata={timeUpdateHandler}
         ref={audioRef}
         src={currentSong.audio}
+        onEnded={songEndHandler}
       ></audio>
     </div>
   );

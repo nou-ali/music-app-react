@@ -1,9 +1,9 @@
 import React from "react";
-import {playAudio} from "../util";
+
 
 const LibrarySong = ({ setSongs, song, songs, setCurrentSong, audioRef, isPlaying, id }) => {
-  const songSelectHandler = () => {
-    setCurrentSong(song);
+  const songSelectHandler = async () => {
+    await setCurrentSong(song);
 
     //add active state
     const newSongs = songs.map((song) => {
@@ -21,7 +21,7 @@ const LibrarySong = ({ setSongs, song, songs, setCurrentSong, audioRef, isPlayin
     });
 
     setSongs(newSongs);
-    playAudio(isPlaying, audioRef)
+    if(isPlaying) audioRef.current.play();
   };
   return (
     <div
