@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -6,7 +6,6 @@ import {
   faAngleRight,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-
 
 const Player = ({
   songInfo,
@@ -19,9 +18,9 @@ const Player = ({
   setCurrentSong,
   setSongs,
 }) => {
-  useEffect(() => {
+  const activeLibraryHandler = (nextPrev) => {
     const newSongs = songs.map((song) => {
-      if (song.id === currentSong.id) {
+      if (song.id === nextPrev.id) {
         return {
           ...song,
           active: true,
@@ -35,7 +34,8 @@ const Player = ({
     });
 
     setSongs(newSongs);
-  }, [currentSong]);
+  };
+
   //Event handlers
   const playSongHandler = () => {
     if (isPlaying) {
@@ -62,28 +62,35 @@ const Player = ({
     let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (direction === "skip-forward") {
       await setCurrentSong(
-        songs[currentIndex + 1 === songs.length ? 0 : currentIndex + 1]
+        songs[currentIndex + 1 === songs.length ? 0 : currentIndex + 1]  
       );
+      activeLibraryHandler (songs[currentIndex + 1 === songs.length ? 0 : currentIndex + 1])
     }
     if (direction === "skip-back") {
       await setCurrentSong(
         songs[currentIndex === 0 ? songs.length - 1 : currentIndex - 1]
       );
+      activeLibraryHandler (songs[currentIndex === 0 ? songs.length - 1 : currentIndex - 1])
     }
-    if(isPlaying) audioRef.current.play();
+    if (isPlaying) audioRef.current.play();
   };
 
-  //adding styling 
+  //adding styling
 
-const trackAnimation = {
-  transform: `translateX(${songInfo.animationPercentage}%)`
-};
+  const trackAnimation = {
+    transform: `translateX(${songInfo.animationPercentage}%)`,
+  };
 
   return (
     <div className="player">
       <div className="time-control">
         <p>{getTime(songInfo.currentTime)}</p>
-        <div style={{background: `linear-gradient(to right, ${currentSong.color[0]}, ${currentSong.color[1]})`}} className="track">
+        <div
+          style={{
+            background: `linear-gradient(to right, ${currentSong.color[0]}, ${currentSong.color[1]})`,
+          }}
+          className="track"
+        >
           <input
             min={0}
             max={songInfo.duration || 0}
@@ -91,8 +98,7 @@ const trackAnimation = {
             onChange={dragHandler}
             type="range"
           ></input>
-          <div style={trackAnimation} className="animate-track">
-          </div>
+          <div style={trackAnimation} className="animate-track"></div>
         </div>
 
         <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
